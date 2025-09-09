@@ -287,7 +287,7 @@
 
                         <!-- Botones -->
                         <StackPanel Grid.Row="4" Margin="0,8,0,8">
-                            <Button Style="{StaticResource PrimaryButton}" Content="Ingresar" Click="SignIn_Click" />
+                            <Button Style="{StaticResource PrimaryButton}" x:Name="SignInButton" Content="Ingresar" Click="SignIn_Click" />
                             <Button Style="{StaticResource GoogleButton}" Margin="0,10,0,0" Click="SignInGoogle_Click">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <!-- “Logo” simple -->

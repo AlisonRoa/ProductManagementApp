@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -56,9 +57,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\ValidationHelper.cs" />
     <Compile Include="Data\SqlDb.cs" />
+    <Compile Include="Models\LoginRequest.cs" />
     <Compile Include="Repositories\UsersRepository.cs" />
     <Compile Include="Security\PasswordHasher.cs" />
+    <Compile Include="Services\IUsersService.cs" />
+    <Compile Include="Services\UsersService.cs" />
     <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -117,9 +122,7 @@
   <ItemGroup>
     <Resource Include="Resources\login_background.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Scripts\Script - Creacion de DB.sql" />
     <Content Include="Scripts\Values.sql" />

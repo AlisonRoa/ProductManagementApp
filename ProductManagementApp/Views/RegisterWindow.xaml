@@ -9,7 +9,7 @@
         Background="Transparent">
 
     <Window.Resources>
-        <!-- TextBox con watermark tomado de Tag -->
+        <!-- TextBox con watermark tomado de Tag (ellipsis + tooltip) -->
         <Style x:Key="WatermarkTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="38"/>
             <Setter Property="Margin" Value="0,6,0,16"/>
@@ -30,10 +30,17 @@
                                 <TextBlock x:Name="Watermark"
                                            Text="{TemplateBinding Tag}"
                                            Foreground="Gray"
-                                           Margin="12,0,0,0"
+                                           Margin="12,0,12,0"
                                            VerticalAlignment="Center"
                                            IsHitTestVisible="False"
-                                           Visibility="Collapsed"/>
+                                           Visibility="Collapsed"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           ToolTipService.ShowDuration="60000">
+                                    <TextBlock.ToolTip>
+                                        <ToolTip Content="{TemplateBinding Tag}"/>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -144,6 +151,21 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Etiquetas de formulario: una línea con … y tooltip -->
+        <Style x:Key="FormLabel" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextTrimming" Value="None"/>
+            <Setter Property="MaxWidth" Value="560"/>
+            <Setter Property="ToolTipService.ShowDuration" Value="60000"/>
+            <Setter Property="ToolTip">
+                <Setter.Value>
+                    <Binding Path="Text" RelativeSource="{RelativeSource Self}"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <!-- Ventana contenedor con imagen de fondo -->
@@ -196,6 +218,7 @@
                         Background="White"
                         CornerRadius="18"
                         Padding="36"
+                        MaxWidth="640"
                         VerticalAlignment="Center"
                         Margin="61,16,60,16">
                     <Border.Effect>
@@ -206,13 +229,19 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
+                            <!-- título -->
                             <RowDefinition Height="Auto"/>
+                            <!-- username -->
                             <RowDefinition Height="Auto"/>
+                            <!-- pass + confirm -->
                             <RowDefinition Height="Auto"/>
+                            <!-- nombres + apellidos -->
                             <RowDefinition Height="Auto"/>
+                            <!-- teléfono + correo -->
                             <RowDefinition Height="Auto"/>
+                            <!-- botones -->
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
+                            <!-- link -->
                         </Grid.RowDefinitions>
 
                         <!-- Título -->
@@ -223,12 +252,13 @@
 
                         <!-- Username -->
                         <StackPanel Grid.Row="1" Orientation="Vertical">
-                            <TextBlock Text="Usuario" FontWeight="SemiBold" Foreground="#374151"/>
+                            <TextBlock Text="Usuario" Style="{StaticResource FormLabel}"/>
                             <TextBox x:Name="TxtUsername" Style="{StaticResource WatermarkTextBox}" Tag="Nombre de usuario"/>
+                            <TextBlock x:Name="ErrUsername" Foreground="#DC2626" FontSize="12" Margin="4,-10,0,0" Visibility="Collapsed"/>
                         </StackPanel>
 
                         <!-- Password + Confirm -->
-                        <Grid Grid.Row="2" Margin="0,0,0,0">
+                        <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="16"/>
@@ -237,7 +267,7 @@
 
                             <!-- Password -->
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="Contraseña" FontWeight="SemiBold" Foreground="#374151"/>
+                                <TextBlock Text="Contraseña" Style="{StaticResource FormLabel}"/>
                                 <Grid>
                                     <PasswordBox x:Name="TxtPassword" Style="{StaticResource PasswordInput}"
                                                  PasswordChanged="TxtPassword_PasswordChanged"
@@ -248,13 +278,21 @@
                                                Foreground="Gray"
                                                Margin="14,17,14,0"
                                                VerticalAlignment="Top"
-                                               IsHitTestVisible="False"/>
+                                               IsHitTestVisible="False"
+                                               TextWrapping="NoWrap"
+                                               TextTrimming="CharacterEllipsis"
+                                               ToolTipService.ShowDuration="60000">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Content="Mín. 6 caracteres"/>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </Grid>
+                                <TextBlock x:Name="ErrPassword" Foreground="#DC2626" FontSize="12" Margin="4,-10,0,0" Visibility="Collapsed"/>
                             </StackPanel>
 
                             <!-- Confirm -->
                             <StackPanel Grid.Column="2">
-                                <TextBlock Text="Confirmar contraseña" FontWeight="SemiBold" Foreground="#374151"/>
+                                <TextBlock Text="Confirmar contraseña" Style="{StaticResource FormLabel}"/>
                                 <Grid>
                                     <PasswordBox x:Name="TxtPassword2" Style="{StaticResource PasswordInput}"
                                                  PasswordChanged="TxtPassword2_PasswordChanged"
@@ -265,8 +303,16 @@
                                                Foreground="Gray"
                                                Margin="14,17,14,0"
                                                VerticalAlignment="Top"
-                                               IsHitTestVisible="False"/>
+                                               IsHitTestVisible="False"
+                                               TextWrapping="NoWrap"
+                                               TextTrimming="CharacterEllipsis"
+                                               ToolTipService.ShowDuration="60000">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Content="Repite tu contraseña"/>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </Grid>
+                                <TextBlock x:Name="ErrPassword2" Foreground="#DC2626" FontSize="12" Margin="4,-10,0,0" Visibility="Collapsed"/>
                             </StackPanel>
                         </Grid>
 
@@ -279,13 +325,16 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="Nombres" FontWeight="SemiBold" Foreground="#374151"/>
+                                <TextBlock Text="Nombres" Style="{StaticResource FormLabel}"/>
                                 <TextBox x:Name="TxtNames" Style="{StaticResource WatermarkTextBox}" Tag="Tus nombres"/>
+                                <TextBlock x:Name="ErrNames" Foreground="#DC2626" FontSize="12" Margin="4,-10,0,0" Visibility="Collapsed"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="2">
-                                <TextBlock Text="Apellidos" FontWeight="SemiBold" Foreground="#374151"/>
-                                <TextBox x:Name="TxtLastNames" Style="{StaticResource WatermarkTextBox}" Tag="Tus apellidos" TextChanged="TxtLastNames_TextChanged"/>
+                                <TextBlock Text="Apellidos" Style="{StaticResource FormLabel}"/>
+                                <TextBox x:Name="TxtLastNames" Style="{StaticResource WatermarkTextBox}" Tag="Tus apellidos"
+                                         TextChanged="TxtLastNames_TextChanged"/>
+                                <TextBlock x:Name="ErrLastNames" Foreground="#DC2626" FontSize="12" Margin="4,-10,0,0" Visibility="Collapsed"/>
                             </StackPanel>
                         </Grid>
 
@@ -298,13 +347,15 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="Teléfono (dddd-dddd)" FontWeight="SemiBold" Foreground="#374151"/>
+                                <TextBlock Text="Teléfono (dddd-dddd)" Style="{StaticResource FormLabel}"/>
                                 <TextBox x:Name="TxtPhone" Style="{StaticResource WatermarkTextBox}" Tag="0000-0000"/>
+                                <TextBlock x:Name="ErrPhone" Foreground="#DC2626" FontSize="12" Margin="4,-10,0,0" Visibility="Collapsed"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="2">
-                                <TextBlock Text="Correo (.com)" FontWeight="SemiBold" Foreground="#374151"/>
+                                <TextBlock Text="Correo (.com)" Style="{StaticResource FormLabel}"/>
                                 <TextBox x:Name="TxtEmail" Style="{StaticResource WatermarkTextBox}" Tag="tucorreo@dominio.com"/>
+                                <TextBlock x:Name="ErrEmail" Foreground="#DC2626" FontSize="12" Margin="4,-10,0,0" Visibility="Collapsed"/>
                             </StackPanel>
                         </Grid>
 
