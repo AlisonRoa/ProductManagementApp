@@ -1,0 +1,313 @@
+﻿<Window x:Class="ProductManagementApp.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Login"
+        Height="600" Width="960"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Window.Resources>
+        <!-- TextBox con watermark tomado de Tag -->
+        <Style x:Key="WatermarkTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Margin" Value="0,6,0,16"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Background" Value="#F7F9FC"/>
+            <Setter Property="BorderBrush" Value="#E3E8EF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10">
+                            <Grid>
+                                <ScrollViewer x:Name="PART_ContentHost"/>
+                                <!-- Watermark -->
+                                <TextBlock x:Name="Watermark"
+                                           Text="{TemplateBinding Tag}"
+                                           Foreground="Gray"
+                                           Margin="12,0,0,0"
+                                           VerticalAlignment="Center"
+                                           IsHitTestVisible="False"
+                                           Visibility="Collapsed"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Mostrar watermark cuando está vacío y sin foco -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                    <Condition Property="IsKeyboardFocused" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Watermark" Property="Visibility" Value="Visible"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="White" CornerRadius="20" Margin="20" >
+        <Grid>
+            <!-- Fondo con gradiente suave tipo "glass" -->
+            <Grid.Background>
+                <ImageBrush ImageSource="pack://application:,,,/Resources/login_background.jpg"
+                        Stretch="UniformToFill"/>
+            </Grid.Background>
+
+            <Button x:Name="BtnClose"
+                    Content="✕"
+                    Width="36" Height="36"
+                    FontWeight="Bold"
+                    FontSize="16"
+                    Foreground="#333"
+                    Background="White"
+                    BorderThickness="0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,10,10,0"
+                    Click="Close_Click">
+                <Button.Effect>
+                    <DropShadowEffect BlurRadius="12"
+                                      ShadowDepth="2"
+                                      Direction="270"
+                                      Color="#55000000"
+                                      Opacity="0.5"/>
+                </Button.Effect>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="18"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Hover -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#f0f0f0"/>
+                            </Trigger>
+                            <!-- Click -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#e0e0e0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <!-- “Card” centrada -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="560"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="1"
+                        Background="White"
+                        CornerRadius="18"
+                        Padding="36"
+                        VerticalAlignment="Center"
+                        Margin="61,16,60,16">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="28"
+                                          ShadowDepth="4"
+                                          Direction="270"
+                                          Color="#33000000"
+                                          Opacity="0.55"/>
+                    </Border.Effect>
+                    <Border.Resources>
+                        <!-- Sombra suave -->
+                        <DropShadowEffect x:Key="CardShadowEffect" BlurRadius="32"
+                                          ShadowDepth="0"
+                                          Color="#40000000"
+                                          Opacity="0.5"/>
+
+                        <!-- Estilos de campos -->
+                        <Style x:Key="InputBox" TargetType="TextBox">
+                            <Setter Property="Height" Value="38"/>
+                            <Setter Property="Margin" Value="0,6,0,16"/>
+                            <Setter Property="Padding" Value="12,6"/>
+                            <Setter Property="Background" Value="#F7F9FC"/>
+                            <Setter Property="BorderBrush" Value="#E3E8EF"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="SnapsToDevicePixels" Value="True"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TextBox">
+                                        <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="10">
+                                            <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="PasswordInput" TargetType="PasswordBox">
+                            <Setter Property="Height" Value="38"/>
+                            <Setter Property="Margin" Value="0,6,0,8"/>
+                            <Setter Property="Padding" Value="12,6"/>
+                            <Setter Property="Background" Value="#F7F9FC"/>
+                            <Setter Property="BorderBrush" Value="#E3E8EF"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="PasswordBox">
+                                        <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="10">
+                                            <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <!-- Botón principal -->
+                        <Style x:Key="PrimaryButton" TargetType="Button">
+                            <Setter Property="Height" Value="42"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border CornerRadius="10">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#6B7CFF" Offset="0"/>
+                                                    <GradientStop Color="#5A64FF" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Opacity" Value="0.9"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0.6"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <!-- Botón Google -->
+                        <Style x:Key="GoogleButton" TargetType="Button">
+                            <Setter Property="Height" Value="42"/>
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="BorderBrush" Value="#E3E8EF"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border CornerRadius="10" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <!-- Hipervínculo -->
+                        <Style TargetType="TextBlock" x:Key="Link">
+                            <Setter Property="Foreground" Value="#5667FF"/>
+                            <Setter Property="TextDecorations" Value="Underline"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Style>
+                    </Border.Resources>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Logo/Marca -->
+                        <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,4,0,18">
+                            <TextBlock Text="ProductManagmentApp" FontWeight="Bold" Foreground="#5A64FF" Opacity="0.9" />
+                        </StackPanel>
+
+                        <!-- Título -->
+                        <StackPanel Grid.Row="1" Margin="0,0,0,14" HorizontalAlignment="Center">
+                            <TextBlock Text="Bienvenid@ De nuevo!" FontSize="22" FontWeight="Bold" Foreground="#111827" TextAlignment="Center"/>
+                            <TextBlock Text="¡Te extrañamos! Introduce tus datos." Foreground="#6B7280" TextAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Email -->
+                        <StackPanel Grid.Row="2">
+                            <TextBlock Text="Correo" FontWeight="SemiBold" Foreground="#374151"/>
+                            <TextBox x:Name="TxtEmail"
+                                 Style="{StaticResource WatermarkTextBox}"
+                                 Tag="Ingresa tu correo"/>
+                        </StackPanel>
+
+                        <!-- Password + links -->
+                        <StackPanel Grid.Row="3">
+                            <TextBlock Text="Contraseña" FontWeight="SemiBold" Foreground="#374151"/>
+
+                            <!-- Wrapper con overlay -->
+                            <Grid>
+                                <!-- PasswordBox real -->
+                                <PasswordBox x:Name="TxtPassword"
+                                         Style="{StaticResource PasswordInput}"
+                                         PasswordChanged="TxtPassword_PasswordChanged"
+                                         GotKeyboardFocus="TxtPassword_GotKeyboardFocus"
+                                         LostKeyboardFocus="TxtPassword_LostKeyboardFocus"/>
+
+                                <!-- Placeholder encima -->
+                                <TextBlock x:Name="PwdHint"
+                                       Text="Ingresa tu contraseña"
+                                       Foreground="Gray"
+                                       Margin="12,0,0,0"
+                                       VerticalAlignment="Center"
+                                       IsHitTestVisible="False"/>
+                            </Grid>
+
+                            <DockPanel LastChildFill="False" Margin="0,4,0,0">
+                                <CheckBox x:Name="ChkRemember" Content="Recuérdame" Foreground="#6B7280" />
+                                <TextBlock Style="{StaticResource Link}" DockPanel.Dock="Right"
+                                       Text="¿Olvidaste tu contraseña?" MouseLeftButtonUp="ForgotPassword_Click"/>
+                            </DockPanel>
+                        </StackPanel>
+
+                        <!-- Botones -->
+                        <StackPanel Grid.Row="4" Margin="0,8,0,8">
+                            <Button Style="{StaticResource PrimaryButton}" Content="Ingresar" Click="SignIn_Click" />
+                            <Button Style="{StaticResource GoogleButton}" Margin="0,10,0,0" Click="SignInGoogle_Click">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <!-- “Logo” simple -->
+                                    <Border Width="18" Height="18" CornerRadius="3" Background="#FFFFFF" BorderBrush="#E3E8EF" BorderThickness="1" Margin="0,0,8,0">
+                                        <TextBlock Text="G" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#DB4437"/>
+                                    </Border>
+                                    <TextBlock Text="Ingresar con Google" Foreground="#111827"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Sign up link -->
+                        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Text="No tienes una cuenta? " Foreground="#6B7280"/>
+                            <TextBlock Text="Registrate" Style="{StaticResource Link}" MouseLeftButtonUp="SignUp_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
+    
