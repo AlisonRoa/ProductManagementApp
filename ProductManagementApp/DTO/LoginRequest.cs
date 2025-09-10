@@ -2,6 +2,10 @@
 
 namespace ProductManagementApp.Models
 {
+    /// <summary>
+    /// Proyección para el login
+    /// [DTO] - Data Transfer Object NO ES UNA ENTIDAD DE BASE DE DATOS
+    /// </summary>
     public class LoginRequest
     {
         [Required, MinLength(3)]

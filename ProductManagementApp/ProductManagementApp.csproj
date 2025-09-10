@@ -35,10 +35,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -57,13 +60,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\PageBgConverter.cs" />
     <Compile Include="Common\ValidationHelper.cs" />
     <Compile Include="Data\SqlDb.cs" />
-    <Compile Include="Models\LoginRequest.cs" />
+    <Compile Include="DTO\LoginRequest.cs" />
+    <Compile Include="DTO\StatusItem.cs" />
+    <Compile Include="Models\Products.cs" />
+    <Compile Include="DTO\ProductListItem.cs" />
+    <Compile Include="DTO\ProductOption.cs" />
+    <Compile Include="Models\StatusCatalog.cs" />
+    <Compile Include="Models\Stocks.cs" />
+    <Compile Include="Models\Suppliers.cs" />
+    <Compile Include="Models\SupplierTypes.cs" />
+    <Compile Include="Repositories\IProductsRepository.cs" />
+    <Compile Include="Repositories\ProductsRepository.cs" />
     <Compile Include="Repositories\UsersRepository.cs" />
     <Compile Include="Security\PasswordHasher.cs" />
+    <Compile Include="Services\IProductsService.cs" />
     <Compile Include="Services\IUsersService.cs" />
+    <Compile Include="Services\ProductsService.cs" />
     <Compile Include="Services\UsersService.cs" />
+    <Compile Include="ViewModels\ProductsViewModel.cs" />
     <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -92,7 +109,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\UserRegistration.cs" />
+    <Compile Include="DTO\UserRegistration.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -126,6 +143,7 @@
   <ItemGroup>
     <Content Include="Scripts\Script - Creacion de DB.sql" />
     <Content Include="Scripts\Values.sql" />
+    <Resource Include="Views\menu.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

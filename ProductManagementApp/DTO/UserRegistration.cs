@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProductManagementApp.Models
 {
+    /// <summary>
+    /// Proyección para el registro de usuario
+    /// [DTO] - Data Transfer Object NO ES UNA ENTIDAD DE BASE DE DATOS
+    /// </summary>
     public class UserRegistration
     {
         [Required, MinLength(3), MaxLength(30)]

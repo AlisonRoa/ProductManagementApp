@@ -10,7 +10,7 @@ namespace ProductManagementApp.Repositories
 {
     public class UsersRepository
     {
-        // --- Validadores de formato ---
+        // #region Validaciones de formato
         private static bool IsEmailCom(string email) =>
             !string.IsNullOrWhiteSpace(email) &&
             Regex.IsMatch(email.Trim(), @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.com$", RegexOptions.IgnoreCase);
@@ -19,7 +19,8 @@ namespace ProductManagementApp.Repositories
             !string.IsNullOrWhiteSpace(phone) &&
             Regex.IsMatch(phone.Trim(), @"^\d{4}-\d{4}$");
 
-        // --- Chequeos de duplicados ---
+        // #endregion
+        // #region Chequeos de duplicados
         public async Task<bool> IsUsernameTakenAsync(string username)
         {
             if (string.IsNullOrWhiteSpace(username)) return false;
@@ -33,7 +34,7 @@ namespace ProductManagementApp.Repositories
                 return r != null;
             }
         }
-
+        
         public async Task<bool> IsEmailTakenAsync(string email)
         {
             if (string.IsNullOrWhiteSpace(email)) return false;
@@ -47,8 +48,9 @@ namespace ProductManagementApp.Repositories
                 return r != null;
             }
         }
+        // #endregion
 
-        // --- Registro ---
+        // #region Registro y Autenticación
         public async Task<int> RegisterAsync(UserRegistration reg)
         {
             if (reg == null) throw new ArgumentNullException(nameof(reg));
@@ -113,5 +115,6 @@ namespace ProductManagementApp.Repositories
                 return r != null;
             }
         }
+        // #endregion
     }
 }

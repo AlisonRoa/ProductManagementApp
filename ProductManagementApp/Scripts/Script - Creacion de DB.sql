@@ -51,7 +51,7 @@ GO
 --    - Útil para segmentar proveedores (Mayorista, Minorista, Internacional, etc.)
 -- ===========================================================================================================
 
-CREATE TABLE PM.SupplierType (
+CREATE TABLE PM.SupplierTypes (
     Id                INT IDENTITY(1,1) PRIMARY KEY,
     SupplierTypeCode  VARCHAR(20) NOT NULL,
     SupplierTypeName  VARCHAR(80) NOT NULL
@@ -62,14 +62,14 @@ GO
 -- ===========================================================================================================
 -- 5) Proveedores
 -- ===========================================================================================================
-CREATE TABLE PM.Supplier (
+CREATE TABLE PM.Suppliers (
     Id              INT IDENTITY(1,1) PRIMARY KEY,
     SupplierCode    VARCHAR(20) NOT NULL,
     SupplierName    VARCHAR(80) NOT NULL,
     TelephoneNumber VARCHAR(20) NOT NULL,
     Email           VARCHAR(80) NOT NULL,
-    StatusId        INT NOT NULL CONSTRAINT FK_Supplier_Status REFERENCES PM.StatusCatalog(Id),
-    SupplierTypeId  INT NOT NULL CONSTRAINT FK_Supplier_SupplierType REFERENCES PM.SupplierType(Id)
+    StatusId        INT NOT NULL CONSTRAINT FK_Suppliers_Status REFERENCES PM.StatusCatalog(Id),
+    SupplierTypesId  INT NOT NULL CONSTRAINT FK_Suppliers_SupplierTypes REFERENCES PM.SupplierTypes(Id)
 );
 GO
 
@@ -84,7 +84,7 @@ CREATE TABLE PM.Products (
     PricePerUnit  DECIMAL(8,2) NOT NULL,
     BasicUnit     VARCHAR(80)  NOT NULL,
     StatusId      INT NOT NULL CONSTRAINT FK_Products_Status REFERENCES PM.StatusCatalog(Id),
-    SupplierId    INT NOT NULL CONSTRAINT FK_Products_Supplier REFERENCES PM.Supplier(Id)
+    SuppliersId    INT NOT NULL CONSTRAINT FK_Products_Suppliers REFERENCES PM.Suppliers(Id)
 );
 GO
 
@@ -95,11 +95,11 @@ GO
 --    - Se separa de Productos para simplificar operaciones de actualización de inventario.
 --    - 'LastUpdate' permite registrar el momento de la última modificación.
 -- ===========================================================================================================
-CREATE TABLE PM.Stock (
+CREATE TABLE PM.Stocks (
     Id         INT IDENTITY(1,1) PRIMARY KEY,
     InStock    DECIMAL(8,2) NOT NULL,
     LastUpdate DATETIME2    NOT NULL,
-    ProductId  INT NOT NULL CONSTRAINT FK_Stock_Products REFERENCES PM.Products(Id)
+    ProductsId  INT NOT NULL CONSTRAINT FK_Stocks_Products REFERENCES PM.Products(Id)
 );
 GO
 
@@ -114,7 +114,7 @@ CREATE TABLE PM.Options (
     OptionCode VARCHAR(20)  NOT NULL,
     OptionName VARCHAR(80)  NOT NULL,
     StatusId   INT NOT NULL CONSTRAINT FK_Options_Status REFERENCES PM.StatusCatalog(Id),
-    ProductId  INT NOT NULL CONSTRAINT FK_Options_Products REFERENCES PM.Products(Id)
+    ProductsId  INT NOT NULL CONSTRAINT FK_Options_Products REFERENCES PM.Products(Id)
 );
 GO
 

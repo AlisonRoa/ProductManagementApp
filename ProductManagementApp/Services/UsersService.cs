@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ProductManagementApp.Common;
 using ProductManagementApp.Models;
 using ProductManagementApp.Repositories;
-// Alias para ValidationResult correcto
+
 using DAValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
 
 namespace ProductManagementApp.Services
