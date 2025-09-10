@@ -6,6 +6,8 @@
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         ResizeMode="CanResize"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
         Background="#F5F7FB" Icon="/Views/menu.png">
 
     <!-- ================== RECURSOS ================== -->
@@ -38,69 +40,190 @@
         <Style x:Key="ComboBoxBlue" TargetType="ComboBox">
             <Setter Property="Foreground" Value="#111827"/>
             <Setter Property="Background" Value="White"/>
+            <!-- blanco -->
             <Setter Property="BorderBrush" Value="#60A5FA"/>
+            <!-- azul borde -->
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="8,2"/>
-            <Setter Property="MinHeight" Value="34"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <!-- más fino -->
+            <Setter Property="MinHeight" Value="30"/>
+            <!-- más bajo -->
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
                         <Grid>
-                            <ToggleButton Name="ToggleButton"
-                                  Grid.Column="2"
-                                  Focusable="False"
-                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                  ClickMode="Press">
-                                <ToggleButton.Template>
-                                    <ControlTemplate TargetType="ToggleButton">
-                                        <Border x:Name="Border"
-                                        CornerRadius="8"
-                                        Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}">
-                                            <Grid>
-                                                <ContentPresenter Margin="6,3,25,3"
-                                                          VerticalAlignment="Center"
-                                                          HorizontalAlignment="Left"/>
-                                                <Path x:Name="Arrow"
-                                              HorizontalAlignment="Right"
-                                              VerticalAlignment="Center"
-                                              Margin="0,0,6,0"
-                                              Data="M 0 0 L 4 4 L 8 0 Z"
-                                              Fill="#2563EB"/>
-                                            </Grid>
-                                        </Border>
-                                    </ControlTemplate>
-                                </ToggleButton.Template>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border x:Name="Box"
+                  CornerRadius="8"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"/>
+
+                            <ContentPresenter x:Name="ContentSite"
+                            Margin="12,0,30,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            IsHitTestVisible="False"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+
+                            <ToggleButton Grid.Column="1"
+                        Focusable="False"
+                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                        ClickMode="Press"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="0">
+                                <Path Data="M 0 0 L 4 4 L 8 0 Z"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Width="10" Height="6" Fill="#2563EB"/>
                             </ToggleButton>
-                            <ContentPresenter Name="ContentSite"
-                                      IsHitTestVisible="False"
-                                      Content="{TemplateBinding SelectionBoxItem}"
-                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                      Margin="6,2,25,2"
-                                      VerticalAlignment="Center"
-                                      HorizontalAlignment="Left"/>
+
                             <Popup Name="Popup"
-                           Placement="Bottom"
-                           IsOpen="{TemplateBinding IsDropDownOpen}"
-                           AllowsTransparency="True"
-                           Focusable="False"
-                           PopupAnimation="Slide">
-                                <Grid MaxHeight="200"
-                              MinWidth="{TemplateBinding ActualWidth}"
-                              Background="White"
-                              SnapsToDevicePixels="True">
-                                    <Border CornerRadius="6"
-                                    BorderBrush="#60A5FA"
-                                    BorderThickness="1"
-                                    Background="White"/>
-                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
-                                        <StackPanel IsItemsHost="True"
-                                            KeyboardNavigation.DirectionalNavigation="Contained"/>
+                 Placement="Bottom"
+                 IsOpen="{TemplateBinding IsDropDownOpen}"
+                 AllowsTransparency="True"
+                 Focusable="False"
+                 PopupAnimation="Slide">
+                                <Border CornerRadius="6"
+                                                Background="White" 
+                                                BorderBrush="#60A5FA"
+                                                BorderThickness="1">
+                                    <ScrollViewer MaxHeight="220" Margin="2">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
                                     </ScrollViewer>
-                                </Grid>
+                                </Border>
                             </Popup>
                         </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Ítems del combo: más altos y cómodos -->
+        <Style x:Key="ComboBlueItem" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#EFF6FF"/>
+                </Trigger>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="#EFF6FF"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#DBEAFE"/>
+                    <Setter Property="Foreground" Value="#0F172A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Combo mejorado -->
+        <Style x:Key="ComboBoxBlueV2" TargetType="ComboBox">
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#60A5FA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="MinWidth" Value="220"/>
+            <!-- para que el popup no se vea estrecho -->
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBlueItem}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="36"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Caja base -->
+                            <Border x:Name="Box"
+                  CornerRadius="10"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"/>
+
+                            <!-- Contenido seleccionado -->
+                            <ContentPresenter x:Name="ContentSite"
+                            Margin="12,0,40,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            IsHitTestVisible="False"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+
+                            <!-- Zona flecha (pastilla azul, redondeada a la derecha) -->
+                            <Border Grid.Column="1"
+                  x:Name="ArrowBg"
+                  CornerRadius="0,10,10,0"
+                  Background="#E8F0FE" />
+                            <ToggleButton Grid.Column="1"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Focusable="False"
+                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                        ClickMode="Press">
+                                <Path Data="M 0 0 L 5 5 L 10 0 Z"
+                  Width="10" Height="6"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Fill="#2563EB"/>
+                            </ToggleButton>
+
+                            <!-- Lista desplegable -->
+                            <Popup x:Name="PART_Popup"       
+                                Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   StaysOpen="False"
+                                   PopupAnimation="Slide">
+                                <Border CornerRadius="10"
+                                        Background="White"
+                                        BorderBrush="#60A5FA"
+                                        BorderThickness="1"
+                                        MinWidth="{Binding PlacementTarget.ActualWidth, RelativeSource={RelativeSource AncestorType=Popup}}">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="14" ShadowDepth="0" Opacity="0.25"/>
+                                    </Border.Effect>
+                                    <ScrollViewer MaxHeight="300" Margin="2"
+                                                  CanContentScroll="True">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+
+                        </Grid>
+
+                        <!-- Estados -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#3B82F6"/>
+                                <Setter TargetName="ArrowBg" Property="Background" Value="#DBEAFE"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#2563EB"/>
+                                <Setter TargetName="Box" Property="BorderThickness" Value="2"/>
+                                <Setter TargetName="ArrowBg" Property="Background" Value="#DBEAFE"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Box" Property="Background" Value="#F3F4F6"/>
+                                <Setter Property="Foreground" Value="#9CA3AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -144,6 +267,49 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Botón de icono “fantasma” -->
+        <Style x:Key="IconGhostButton" TargetType="Button">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="ToolTipService.ShowDuration" Value="4000"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bg" CornerRadius="10" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#EEF2FF"/>
+                                <Setter Property="Foreground" Value="#2563EB"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#E0EAFF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#9CA3AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Ícono tipo “sliders” (opciones) -->
+        <GeometryGroup x:Key="IconOptionsVector">
+            <LineGeometry StartPoint="5,7"  EndPoint="19,7"/>
+            <LineGeometry StartPoint="5,13" EndPoint="19,13"/>
+            <LineGeometry StartPoint="5,19" EndPoint="19,19"/>
+            <EllipseGeometry Center="9,7"  RadiusX="2" RadiusY="2"/>
+            <EllipseGeometry Center="13,13" RadiusX="2" RadiusY="2"/>
+            <EllipseGeometry Center="11,19" RadiusX="2" RadiusY="2"/>
+        </GeometryGroup>
 
         <!-- Botón suave reutilizable (por si lo necesitas luego) -->
         <Style x:Key="BtnSoft" TargetType="Button">
@@ -196,39 +362,35 @@
                     <Style TargetType="DataGridCell">
                         <Setter Property="BorderThickness" Value="0"/>
                         <Setter Property="Padding" Value="8,0"/>
+                        <Setter Property="Foreground" Value="#0F172A"/>
+                        <!-- texto normal -->
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="{StaticResource RowHover}"/>
+                                <Setter Property="Foreground" Value="#0F172A"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Background" Value="#E0EAFF"/>
                                 <!-- azul suave -->
+                                <Setter Property="Foreground" Value="#0F172A"/>
+                                <!-- **SIEMPRE negro** -->
                             </Trigger>
                         </Style.Triggers>
                     </Style>
                 </Setter.Value>
             </Setter>
-            <Setter Property="ColumnHeaderStyle">
-                <Setter.Value>
-                    <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="FontWeight" Value="SemiBold"/>
-                        <Setter Property="Foreground" Value="{StaticResource TextSub}"/>
-                        <Setter Property="Background" Value="#F8FAFC"/>
-                        <Setter Property="BorderBrush" Value="{StaticResource Border}"/>
-                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                        <Setter Property="Padding" Value="10,8"/>
-                    </Style>
-                </Setter.Value>
-            </Setter>
-            <!-- Forzar fila seleccionada azul (evita amarillo del tema del SO) -->
+
             <Setter Property="RowStyle">
                 <Setter.Value>
                     <Style TargetType="DataGridRow">
                         <Setter Property="Background" Value="{x:Null}"/>
                         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Setter Property="Foreground" Value="#0F172A"/>
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Background" Value="#E0EAFF"/>
+                                <Setter Property="Foreground" Value="#0F172A"/>
+                                <!-- **SIEMPRE negro** -->
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -371,10 +533,12 @@
 
                     <!-- Filtro de estado -->
                     <ComboBox Grid.Column="1"
-                              Style="{StaticResource ComboBoxBlue}"
+                              Style="{StaticResource ComboBoxBlueV2}"
                               ItemsSource="{Binding Statuses}"
                               SelectedItem="{Binding SelectedStatus}"
-                              ItemTemplate="{StaticResource StatusItemTemplate}"/>
+                              ItemTemplate="{StaticResource StatusItemTemplate}"
+                              Padding="10,4"
+                              MinHeight="30"/>
                 </Grid>
             </Border>
 
@@ -397,23 +561,25 @@
                         <DataGridTextColumn Header="Proveedor" Binding="{Binding SupplierName}" Width="220"/>
                         <DataGridTextColumn Header="Existencia" Binding="{Binding InStock}" Width="130" ElementStyle="{StaticResource RightAligned}"/>
                         <DataGridTextColumn Header="Precio" Binding="{Binding PricePerUnit, StringFormat={}{0:C}}" Width="130" ElementStyle="{StaticResource RightAligned}"/>
-                        <DataGridTemplateColumn Header="Acciones" Width="80">
+
+                        <DataGridTemplateColumn Header="Opciones" Width="80">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Width="36" Height="36" Background="#EEF2FF" BorderBrush="{x:Null}" Cursor="Hand">
-                                        <Path Data="{StaticResource DotsVertical}" Fill="#111827" Stretch="Uniform" Width="16" Height="16"/>
-                                        <Button.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Header="Editar"/>
-                                                <MenuItem Header="Duplicar"/>
-                                                <MenuItem Header="Eliminar"/>
-                                                <MenuItem Header="Descargar"/>
-                                            </ContextMenu>
-                                        </Button.ContextMenu>
+                                    <Button Style="{StaticResource IconGhostButton}"
+                                            ToolTip="Ver opciones"
+                                            Click="OpenOptions_Click">
+                                        <Path Data="{StaticResource IconOptionsVector}"
+                                              Width="18" Height="18"
+                                              Stretch="Uniform"
+                                              Fill="Transparent"
+                                              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                              StrokeThickness="1.6"
+                                              SnapsToDevicePixels="True"/>
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>

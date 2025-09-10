@@ -35,7 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -64,10 +63,11 @@
     <Compile Include="Common\ValidationHelper.cs" />
     <Compile Include="Data\SqlDb.cs" />
     <Compile Include="DTO\LoginRequest.cs" />
+    <Compile Include="DTO\OptionItem.cs" />
     <Compile Include="DTO\StatusItem.cs" />
     <Compile Include="Models\Products.cs" />
     <Compile Include="DTO\ProductListItem.cs" />
-    <Compile Include="DTO\ProductOption.cs" />
+    <Compile Include="Models\Options.cs" />
     <Compile Include="Models\StatusCatalog.cs" />
     <Compile Include="Models\Stocks.cs" />
     <Compile Include="Models\Suppliers.cs" />
@@ -80,9 +80,13 @@
     <Compile Include="Services\IUsersService.cs" />
     <Compile Include="Services\ProductsService.cs" />
     <Compile Include="Services\UsersService.cs" />
+    <Compile Include="ViewModels\OptionsViewModel.cs" />
     <Compile Include="ViewModels\ProductsViewModel.cs" />
     <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OptionsWindow.xaml.cs">
+      <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RegisterWindow.xaml.cs">
       <DependentUpon>RegisterWindow.xaml</DependentUpon>
@@ -102,6 +106,10 @@
     <Page Include="Views\LoginWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\OptionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RegisterWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

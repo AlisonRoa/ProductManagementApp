@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductManagementApp.Models
+namespace ProductManagementApp.DTO
 {
     /// <summary>
-    /// Proyección para el listado (lo que muestra el DataGrid)
+    /// Proyección para un ítem de opción
     /// [DTO] - Data Transfer Object NO ES UNA ENTIDAD DE BASE DE DATOS
     /// </summary>
-    public class ProductOption
+    public class OptionItem
     {
         public int Id { get; set; }
         public string OptionCode { get; set; } = "";
         public string OptionName { get; set; } = "";
         public int StatusId { get; set; }
-        public int ProductId { get; set; }
+        public string StatusName { get; set; } = "";
+        public int ProductsId { get; set; }
     }
 }

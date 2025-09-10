@@ -1,0 +1,225 @@
+﻿<Window x:Class="ProductManagementApp.Views.OptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Opciones del producto"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Width="780" Height="520"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        Background="#F5F7FB" Icon="/Views/menu.png">
+
+    <!-- ======= Estilos mínimos locales ======= -->
+    <Window.Resources>
+        <!-- Colores base -->
+        <SolidColorBrush x:Key="Primary" Color="#2563EB"/>
+        <SolidColorBrush x:Key="PrimarySoft" Color="#E8F0FE"/>
+        <SolidColorBrush x:Key="TextSub" Color="#64748B"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#E5E7EB"/>
+
+        <!-- Card -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="18"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="16" ShadowDepth="0" Opacity="0.28"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Pill" TargetType="Border">
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Background" Value="#EDF2FF"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+
+        <!-- DataGrid (suave) -->
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="RowHeight" Value="42"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#FAFAFA"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,0"/>
+        </Style>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F3F6FF"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+
+        <!-- Botón base -->
+        <Style TargetType="Button" x:Key="SoftBtn">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="MinWidth" Value="180"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="Background" Value="#EFF4FF"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="14">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Margin="8,0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#E6EEFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#DCE7FF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="bd" Property="Background" Value="#F1F5F9"/>
+                                <Setter Property="Foreground" Value="#9CA3AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Botón primario -->
+        <Style TargetType="Button" x:Key="PrimaryBtn" BasedOn="{StaticResource SoftBtn}">
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="14">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Margin="8,0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#1F54C9"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#1A47AB"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="bd" Property="Background" Value="#9EB8FF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+    </Window.Resources>
+
+    <!-- ======= Layout ======= -->
+    <Grid Margin="16">
+        <Border Style="{StaticResource Card}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <StackPanel Orientation="Vertical" Margin="0,6,0,0">
+                    <TextBlock Text="{Binding Product.ProductName}" FontWeight="SemiBold" FontSize="14"/>
+                    <WrapPanel Margin="0,6,0,0">
+                        <Border Style="{StaticResource Pill}">
+                            <TextBlock Text="{Binding Product.ProductCode}" FontSize="12" Foreground="#0F172A"/>
+                        </Border>
+
+                        <Border Style="{StaticResource Pill}" Margin="0,0,8,8">
+                            <TextBlock Text="{Binding Product.StatusName}"/>
+                        </Border>
+                        <Border Style="{StaticResource Pill}" Margin="0,0,8,8">
+                            <TextBlock Text="{Binding Product.SupplierName}"/>
+                        </Border>
+                    </WrapPanel>
+                </StackPanel>
+
+                <!-- “Selector” lateral como en el mock (simple banda) -->
+                <Border Grid.Row="1" Background="#F3F6FF" CornerRadius="10" Padding="8" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal" >
+                        <Border Grid.Row="1" Background="#B3D7F2" CornerRadius="12" Padding="10,8" Margin="0,8,0,10">
+                            <TextBlock Text="Opciones del producto" FontWeight="SemiBold" Foreground="#0F172A"/>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- Tabla de opciones -->
+                <Border Grid.Row="2" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1" Background="White">
+                    <DataGrid ItemsSource="{Binding Options}" SelectedItem="{Binding Selected}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Código" Binding="{Binding OptionCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="160"/>
+                            <DataGridTextColumn Header="Nombre" Binding="{Binding OptionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                            <DataGridComboBoxColumn Header="Estado"
+                                                    SelectedValueBinding="{Binding StatusId, Mode=TwoWay}"
+                                                    SelectedValuePath="Id"
+                                                    DisplayMemberPath="Name"
+                                                    ItemsSource="{Binding Statuses}"
+                                                    Width="180"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+
+                <Grid Grid.Row="3" Margin="0,14,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Foreground="{StaticResource TextSub}"
+                               Text="{Binding Options.Count, StringFormat={}{0} opciones}" />
+
+                    <Button Grid.Column="1" Content="Agregar opción"
+                            Command="{Binding AddCommand}"
+                            Style="{StaticResource SoftBtn}" Margin="10,0,0,0"/>
+
+                    <Button Grid.Column="2" Content="Guardar seleccionado"
+                            Command="{Binding SaveCommand}"
+                            Style="{StaticResource PrimaryBtn}" Margin="10,0,0,0"/>
+
+                    <Button Grid.Column="3" Content="Cerrar"
+                            Command="{Binding CloseCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                            Style="{StaticResource SoftBtn}" Margin="10,0,0,0"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

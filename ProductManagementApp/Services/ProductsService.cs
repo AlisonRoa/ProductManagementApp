@@ -9,22 +9,18 @@ namespace ProductManagementApp.Services
     public class ProductsService : IProductsService
     {
         private readonly IProductsRepository _repo;
-
-        public ProductsService(IProductsRepository repo)
-        {
-            _repo = repo;
-        }
+        public ProductsService(IProductsRepository repo) => _repo = repo;
 
         public async Task<IReadOnlyList<ProductListItem>> GetProductsAsync()
-        {
-            var list = await _repo.GetProductsAsync();
-            return list;
-        }
+            => await _repo.GetProductsAsync();
 
         public async Task<IReadOnlyList<StatusItem>> GetStatusesAsync()
-        {
-            var list = await _repo.GetStatusesAsync();
-            return list;
-        }
+            => await _repo.GetStatusesAsync();
+
+        public Task<IList<OptionItem>> GetOptionsByProductAsync(int productId)
+            => _repo.GetOptionsByProductAsync(productId);
+
+        public Task<OptionItem> SaveOptionAsync(OptionItem option)
+            => _repo.SaveOptionAsync(option);
     }
 }

@@ -35,30 +35,30 @@ namespace ProductManagementApp.Repositories
         public async Task<List<ProductListItem>> GetProductsAsync()
         {
             const string sql = @"
-                                SELECT 
-                                    p.Id,
-                                    p.ProductCode,
-                                    p.ProductName,
-                                    sc.StatusName,
-                                    s.SupplierName,
-                                    ISNULL(st.InStock, 0) AS InStock,
-                                    p.PricePerUnit,
-                                    p.BasicUnit,
-                                    ISNULL(stu.LastUpdate, SYSDATETIME()) AS CreatedDate
-                                FROM PM.Products p
-                                JOIN PM.StatusCatalog sc ON sc.Id = p.StatusId
-                                JOIN PM.Suppliers s       ON s.Id  = p.SuppliersId
-                                LEFT JOIN (
-                                    SELECT ProductsId, SUM(InStock) AS InStock
-                                    FROM PM.Stocks
-                                    GROUP BY ProductsId
-                                ) st  ON st.ProductsId  = p.Id
-                                LEFT JOIN (
-                                    SELECT ProductsId, MAX(LastUpdate) AS LastUpdate
-                                    FROM PM.Stocks
-                                    GROUP BY ProductsId
-                                ) stu ON stu.ProductsId = p.Id
-                                ORDER BY p.ProductName ASC;";
+                SELECT 
+                    p.Id,
+                    p.ProductCode,
+                    p.ProductName,
+                    sc.StatusName,
+                    s.SupplierName,
+                    ISNULL(st.InStock, 0) AS InStock,
+                    p.PricePerUnit,
+                    p.BasicUnit,
+                    ISNULL(stu.LastUpdate, SYSDATETIME()) AS CreatedDate
+                FROM PM.Products p
+                JOIN PM.StatusCatalog sc ON sc.Id = p.StatusId
+                JOIN PM.Suppliers s       ON s.Id  = p.SuppliersId
+                LEFT JOIN (
+                    SELECT ProductsId, SUM(InStock) AS InStock
+                    FROM PM.Stocks
+                    GROUP BY ProductsId
+                ) st  ON st.ProductsId  = p.Id
+                LEFT JOIN (
+                    SELECT ProductsId, MAX(LastUpdate) AS LastUpdate
+                    FROM PM.Stocks
+                    GROUP BY ProductsId
+                ) stu ON stu.ProductsId = p.Id
+                ORDER BY p.ProductName ASC;";
 
             var list = new List<ProductListItem>();
 
@@ -123,6 +123,81 @@ namespace ProductManagementApp.Repositories
                 }
             }
             return list;
+        }
+
+        public async Task<IList<OptionItem>> GetOptionsByProductAsync(int productId)
+        {
+            var list = new List<OptionItem>();
+            const string sql = @"
+                SELECT o.Id, o.OptionCode, o.OptionName, o.StatusId, s.StatusName, o.ProductsId AS ProductId
+                FROM PM.Options o
+                JOIN PM.StatusCatalog s ON s.Id = o.StatusId
+                WHERE o.ProductsId = @pid
+                ORDER BY o.OptionName;";
+
+            using (var cn = CreateConnection())
+            using (var cmd = new SqlCommand(sql, cn))
+            {
+                cmd.Parameters.Add("@pid", SqlDbType.Int).Value = productId;
+                await cn.OpenAsync().ConfigureAwait(false);
+                using (var rd = await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection).ConfigureAwait(false))
+                {
+                    while (await rd.ReadAsync().ConfigureAwait(false))
+                    {
+                        list.Add(new OptionItem
+                        {
+                            Id = rd.GetInt32(0),
+                            OptionCode = rd.GetString(1),
+                            OptionName = rd.GetString(2),
+                            StatusId = rd.GetInt32(3),
+                            StatusName = rd.GetString(4),
+                            ProductsId = rd.GetInt32(5)
+                        });
+                    }
+                }
+            }
+            return list;
+        }
+
+        public async Task<OptionItem> SaveOptionAsync(OptionItem o)
+        {
+            using (var cn = CreateConnection())
+            {
+                await cn.OpenAsync().ConfigureAwait(false);
+
+                if (o.Id == 0)
+                {
+                    const string ins = @"
+                        INSERT INTO PM.Options (OptionCode, OptionName, StatusId, ProductsId)
+                        VALUES (@code, @name, @sid, @pid);
+                        SELECT SCOPE_IDENTITY();";
+                    using (var cmd = new SqlCommand(ins, cn))
+                    {
+                        cmd.Parameters.AddWithValue("@code", o.OptionCode);
+                        cmd.Parameters.AddWithValue("@name", o.OptionName);
+                        cmd.Parameters.AddWithValue("@sid", o.StatusId);
+                        cmd.Parameters.AddWithValue("@pid", o.ProductsId);
+                        var idObj = await cmd.ExecuteScalarAsync().ConfigureAwait(false);
+                        o.Id = Convert.ToInt32(idObj);
+                    }
+                }
+                else
+                {
+                    const string upd = @"
+                        UPDATE PM.Options
+                        SET OptionCode=@code, OptionName=@name, StatusId=@sid
+                        WHERE Id=@id;";
+                    using (var cmd = new SqlCommand(upd, cn))
+                    {
+                        cmd.Parameters.AddWithValue("@code", o.OptionCode);
+                        cmd.Parameters.AddWithValue("@name", o.OptionName);
+                        cmd.Parameters.AddWithValue("@sid", o.StatusId);
+                        cmd.Parameters.AddWithValue("@id", o.Id);
+                        await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
+                    }
+                }
+            }
+            return o;
         }
     }
 }

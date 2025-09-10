@@ -16,6 +16,7 @@ namespace ProductManagementApp.ViewModels
     {
         private readonly IProductsService _service;
         private readonly ICollectionView _view;
+        public IProductsService Service { get { return _service; } }
 
         public ProductsViewModel(IProductsService service)
         {
