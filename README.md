@@ -77,19 +77,19 @@ ProductManagementApp/
 ## 🖼️ Capturas
 
 - **Login**  
-  ![Login](Resources/Docs/Frame%20-%20Login.png)
+  ![Login](ProductManagementApp/Resources/Docs/Frame%20-%20Login.png)
 
 - **Registro**  
-  ![Registro](Resources/Docs/Frame%20-%20Register.png)
+  ![Registro](ProductManagementApp/Resources/Docs/Frame%20-%20Register.png)
 
 - **Productos (listado + filtros)**  
-  ![Productos](Resources/Docs/Frame%20-%20Products.png)
+  ![Productos](ProductManagementApp/Resources/Docs/Frame%20-%20Products.png)
 
 - **Opciones por producto**  
-  ![Opciones](Resources/Docs/Frame%20-%20Options.png)
+  ![Opciones](ProductManagementApp/Resources/Docs/Frame%20-%20Options.png)
 
 - **Modelo de Base de Datos**  
-  ![Modelo BD](Resources/Docs/Schema.png)
+  ![Modelo BD](ProductManagementApp/Resources/Docs/Schema.png)
 
 ## 🔀 Flujo de ramas / Git
 
