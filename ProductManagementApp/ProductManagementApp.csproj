@@ -36,8 +36,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -56,8 +59,40 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\PageBgConverter.cs" />
+    <Compile Include="Common\RelayCommand.cs" />
+    <Compile Include="Common\ValidationHelper.cs" />
     <Compile Include="Data\SqlDb.cs" />
-    <Page Include="MainWindow.xaml">
+    <Compile Include="DTO\LoginRequest.cs" />
+    <Compile Include="DTO\OptionItem.cs" />
+    <Compile Include="DTO\StatusItem.cs" />
+    <Compile Include="Models\Products.cs" />
+    <Compile Include="DTO\ProductListItem.cs" />
+    <Compile Include="Models\Options.cs" />
+    <Compile Include="Models\StatusCatalog.cs" />
+    <Compile Include="Models\Stocks.cs" />
+    <Compile Include="Models\Suppliers.cs" />
+    <Compile Include="Models\SupplierTypes.cs" />
+    <Compile Include="Repositories\IProductsRepository.cs" />
+    <Compile Include="Repositories\ProductsRepository.cs" />
+    <Compile Include="Repositories\UsersRepository.cs" />
+    <Compile Include="Security\PasswordHasher.cs" />
+    <Compile Include="Services\IProductsService.cs" />
+    <Compile Include="Services\IUsersService.cs" />
+    <Compile Include="Services\ProductsService.cs" />
+    <Compile Include="Services\UsersService.cs" />
+    <Compile Include="ViewModels\OptionsViewModel.cs" />
+    <Compile Include="ViewModels\ProductsViewModel.cs" />
+    <Compile Include="Views\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OptionsWindow.xaml.cs">
+      <DependentUpon>OptionsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RegisterWindow.xaml.cs">
+      <DependentUpon>RegisterWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -65,12 +100,26 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\LoginWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\OptionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RegisterWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\UserRegistration.cs" />
+    <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -92,6 +141,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Reame.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -99,13 +149,16 @@
   <ItemGroup>
     <Resource Include="Resources\login_background.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Scripts\" />
-    <Folder Include="Security\" />
-    <Folder Include="Services\" />
-    <Folder Include="Views\" />
+    <Resource Include="Resources\Docs\Frame - Login.png" />
+    <Resource Include="Resources\Docs\Frame - Options.png" />
+    <Resource Include="Resources\Docs\Frame - Products.png" />
+    <Resource Include="Resources\Docs\Frame - Register.png" />
+    <Resource Include="Resources\Docs\Schema.png" />
+    <Content Include="Scripts\Script - Creacion de DB.sql" />
+    <Content Include="Scripts\Values.sql" />
+    <Resource Include="Views\menu.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

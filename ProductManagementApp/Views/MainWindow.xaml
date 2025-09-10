@@ -1,0 +1,624 @@
+﻿<Window x:Class="ProductManagementApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:ProductManagementApp.Common"
+        Title="Productos"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        ResizeMode="CanResize"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        Background="#F5F7FB" Icon="/Views/menu.png">
+
+    <!-- ================== RECURSOS ================== -->
+    <Window.Resources>
+
+        <!-- Paleta -->
+        <SolidColorBrush x:Key="Primary" Color="#2563EB"/>
+        <!-- azul principal -->
+        <SolidColorBrush x:Key="PrimarySoft" Color="#E8F0FE"/>
+        <SolidColorBrush x:Key="Accent" Color="#38BDF8"/>
+        <!-- celeste -->
+        <SolidColorBrush x:Key="Success" Color="#22C55E"/>
+        <SolidColorBrush x:Key="Danger" Color="#EF4444"/>
+
+        <SolidColorBrush x:Key="TextMain" Color="#0F172A"/>
+        <SolidColorBrush x:Key="TextSub" Color="#64748B"/>
+        <SolidColorBrush x:Key="Card" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="Border" Color="#E5E7EB"/>
+        <SolidColorBrush x:Key="RowHover" Color="#F8FAFC"/>
+
+        <Thickness x:Key="CardPad">16</Thickness>
+        <CornerRadius x:Key="RadiusLg">18</CornerRadius>
+
+        <!-- Encabezado con gradiente -->
+        <LinearGradientBrush x:Key="HeaderGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#2563EB" Offset="0"/>
+            <GradientStop Color="#38BDF8" Offset="1"/>
+        </LinearGradientBrush>
+
+        <Style x:Key="ComboBoxBlue" TargetType="ComboBox">
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="Background" Value="White"/>
+            <!-- blanco -->
+            <Setter Property="BorderBrush" Value="#60A5FA"/>
+            <!-- azul borde -->
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <!-- más fino -->
+            <Setter Property="MinHeight" Value="30"/>
+            <!-- más bajo -->
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border x:Name="Box"
+                  CornerRadius="8"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"/>
+
+                            <ContentPresenter x:Name="ContentSite"
+                            Margin="12,0,30,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            IsHitTestVisible="False"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+
+                            <ToggleButton Grid.Column="1"
+                        Focusable="False"
+                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                        ClickMode="Press"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="0">
+                                <Path Data="M 0 0 L 4 4 L 8 0 Z"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Width="10" Height="6" Fill="#2563EB"/>
+                            </ToggleButton>
+
+                            <Popup Name="Popup"
+                 Placement="Bottom"
+                 IsOpen="{TemplateBinding IsDropDownOpen}"
+                 AllowsTransparency="True"
+                 Focusable="False"
+                 PopupAnimation="Slide">
+                                <Border CornerRadius="6"
+                                                Background="White" 
+                                                BorderBrush="#60A5FA"
+                                                BorderThickness="1">
+                                    <ScrollViewer MaxHeight="220" Margin="2">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Ítems del combo: más altos y cómodos -->
+        <Style x:Key="ComboBlueItem" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#EFF6FF"/>
+                </Trigger>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="#EFF6FF"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#DBEAFE"/>
+                    <Setter Property="Foreground" Value="#0F172A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Combo mejorado -->
+        <Style x:Key="ComboBoxBlueV2" TargetType="ComboBox">
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#60A5FA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="MinWidth" Value="220"/>
+            <!-- para que el popup no se vea estrecho -->
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBlueItem}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="36"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Caja base -->
+                            <Border x:Name="Box"
+                  CornerRadius="10"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"/>
+
+                            <!-- Contenido seleccionado -->
+                            <ContentPresenter x:Name="ContentSite"
+                            Margin="12,0,40,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            IsHitTestVisible="False"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+
+                            <!-- Zona flecha (pastilla azul, redondeada a la derecha) -->
+                            <Border Grid.Column="1"
+                  x:Name="ArrowBg"
+                  CornerRadius="0,10,10,0"
+                  Background="#E8F0FE" />
+                            <ToggleButton Grid.Column="1"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Focusable="False"
+                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                        ClickMode="Press">
+                                <Path Data="M 0 0 L 5 5 L 10 0 Z"
+                  Width="10" Height="6"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Fill="#2563EB"/>
+                            </ToggleButton>
+
+                            <!-- Lista desplegable -->
+                            <Popup x:Name="PART_Popup"       
+                                Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   StaysOpen="False"
+                                   PopupAnimation="Slide">
+                                <Border CornerRadius="10"
+                                        Background="White"
+                                        BorderBrush="#60A5FA"
+                                        BorderThickness="1"
+                                        MinWidth="{Binding PlacementTarget.ActualWidth, RelativeSource={RelativeSource AncestorType=Popup}}">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="14" ShadowDepth="0" Opacity="0.25"/>
+                                    </Border.Effect>
+                                    <ScrollViewer MaxHeight="300" Margin="2"
+                                                  CanContentScroll="True">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+
+                        </Grid>
+
+                        <!-- Estados -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#3B82F6"/>
+                                <Setter TargetName="ArrowBg" Property="Background" Value="#DBEAFE"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#2563EB"/>
+                                <Setter TargetName="Box" Property="BorderThickness" Value="2"/>
+                                <Setter TargetName="ArrowBg" Property="Background" Value="#DBEAFE"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Box" Property="Background" Value="#F3F4F6"/>
+                                <Setter Property="Foreground" Value="#9CA3AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- TextBox con placeholder (Tag) -->
+        <Style x:Key="TextBoxCue" TargetType="TextBox">
+            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Border}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <Border CornerRadius="10"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="10,0"/>
+                            <TextBlock x:Name="Cue"
+                                       Text="{TemplateBinding Tag}"
+                                       Foreground="{StaticResource TextSub}"
+                                       Margin="12,0"
+                                       IsHitTestVisible="False"
+                                       VerticalAlignment="Center"
+                                       Visibility="Collapsed"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Cue" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource Primary}"/>
+                                <Setter Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Botón de icono “fantasma” -->
+        <Style x:Key="IconGhostButton" TargetType="Button">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="ToolTipService.ShowDuration" Value="4000"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bg" CornerRadius="10" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#EEF2FF"/>
+                                <Setter Property="Foreground" Value="#2563EB"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#E0EAFF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#9CA3AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Ícono tipo “sliders” (opciones) -->
+        <GeometryGroup x:Key="IconOptionsVector">
+            <LineGeometry StartPoint="5,7"  EndPoint="19,7"/>
+            <LineGeometry StartPoint="5,13" EndPoint="19,13"/>
+            <LineGeometry StartPoint="5,19" EndPoint="19,19"/>
+            <EllipseGeometry Center="9,7"  RadiusX="2" RadiusY="2"/>
+            <EllipseGeometry Center="13,13" RadiusX="2" RadiusY="2"/>
+            <EllipseGeometry Center="11,19" RadiusX="2" RadiusY="2"/>
+        </GeometryGroup>
+
+        <!-- Botón suave reutilizable (por si lo necesitas luego) -->
+        <Style x:Key="BtnSoft" TargetType="Button">
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="Background" Value="#EEF2FF"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="16" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8,2"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Tarjeta -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="{StaticResource RadiusLg}"/>
+            <Setter Property="Padding" Value="{StaticResource CardPad}"/>
+            <Setter Property="Background" Value="{StaticResource Card}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Border}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="18" ShadowDepth="0" Color="#1A000000" Opacity="0.5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- DataGrid moderno + selección AZUL -->
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="RowHeight" Value="44"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#FAFAFA"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="8,0"/>
+                        <Setter Property="Foreground" Value="#0F172A"/>
+                        <!-- texto normal -->
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource RowHover}"/>
+                                <Setter Property="Foreground" Value="#0F172A"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#E0EAFF"/>
+                                <!-- azul suave -->
+                                <Setter Property="Foreground" Value="#0F172A"/>
+                                <!-- **SIEMPRE negro** -->
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="RowStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="{x:Null}"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Setter Property="Foreground" Value="#0F172A"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#E0EAFF"/>
+                                <Setter Property="Foreground" Value="#0F172A"/>
+                                <!-- **SIEMPRE negro** -->
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Badge Estado (con soporte EN/ES) -->
+        <Style x:Key="StatusBadge" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="Background" Value="#E5E7EB"/>
+            <Setter Property="BorderBrush" Value="#D1D5DB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style x:Key="StatusBadgeBorderStyle" TargetType="Border" BasedOn="{StaticResource StatusBadge}">
+            <Style.Triggers>
+                <!-- Activo / Active -->
+                <DataTrigger Binding="{Binding StatusName}" Value="Activo">
+                    <Setter Property="Background" Value="#DAFDBA"/>
+                    <Setter Property="BorderBrush" Value="#45C4B0"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding StatusName}" Value="Active">
+                    <Setter Property="Background" Value="#DAFDBA"/>
+                    <Setter Property="BorderBrush" Value="#45C4B0"/>
+                </DataTrigger>
+
+                <!-- Inactivo / Inactive -->
+                <DataTrigger Binding="{Binding StatusName}" Value="Inactivo">
+                    <Setter Property="Background" Value="#FFE4E6"/>
+                    <Setter Property="BorderBrush" Value="#FDA4AF"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding StatusName}" Value="Inactive">
+                    <Setter Property="Background" Value="#FFE4E6"/>
+                    <Setter Property="BorderBrush" Value="#FDA4AF"/>
+                </DataTrigger>
+
+                <!-- Borrador / Draft -->
+                <DataTrigger Binding="{Binding StatusName}" Value="Borrador">
+                    <Setter Property="Background" Value="#E5E7EB"/>
+                    <Setter Property="BorderBrush" Value="#0A36CC"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding StatusName}" Value="Draft">
+                    <Setter Property="Background" Value="#DBEAFE"/>
+                    <Setter Property="BorderBrush" Value="#93C5FD"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Combo de estado con dot (EN/ES) -->
+        <DataTemplate x:Key="StatusItemTemplate">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Ellipse Width="8" Height="8" Fill="#9CA3AF">
+                    <Ellipse.Style>
+                        <Style TargetType="Ellipse">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Name}" Value="Activo">
+                                    <Setter Property="Fill" Value="#2563EB"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Name}" Value="Active">
+                                    <Setter Property="Fill" Value="#2563EB"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Name}" Value="Inactivo">
+                                    <Setter Property="Fill" Value="#EF4444"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Name}" Value="Inactive">
+                                    <Setter Property="Fill" Value="#EF4444"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Name}" Value="Borrador">
+                                    <Setter Property="Fill" Value="#9CA3AF"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Name}" Value="Draft">
+                                    <Setter Property="Fill" Value="#9CA3AF"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Ellipse.Style>
+                </Ellipse>
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- Alineación numérica -->
+        <Style x:Key="RightAligned" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+
+        <!-- Converter de paginación -->
+        <conv:PageBgConverter x:Key="PageBgConverter"/>
+
+        <!-- Ícono tres puntos -->
+        <Geometry x:Key="DotsVertical">M10,6 A2,2 0 1 1 10,10 A2,2 0 1 1 10,6 M10,11 A2,2 0 1 1 10,15 A2,2 0 1 1 10,11 M10,16 A2,2 0 1 1 10,20 A2,2 0 1 1 10,16</Geometry>
+    </Window.Resources>
+
+    <!-- ================== LAYOUT ================== -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ====== BARRA SUPERIOR (sin botones) ====== -->
+        <Border Background="{StaticResource HeaderGradient}" Padding="24,16" Grid.Row="0">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Productos" FontSize="26" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Listado con búsqueda, filtros y acciones"
+                           Foreground="#EAF6FF" Margin="0,2,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ====== CONTENIDO ====== -->
+        <Grid Grid.Row="1" Margin="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Filtros -->
+            <Border Grid.Row="0"
+                CornerRadius="12"
+                Padding="12"
+                Background="#DBEAFE"
+                BorderBrush="#60A5FA"
+                BorderThickness="1">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="280"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Buscador -->
+                    <TextBox Grid.Column="0"
+                             Style="{StaticResource TextBoxCue}"
+                             Tag="Buscar por código, nombre o proveedor"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,12,0"/>
+
+                    <!-- Filtro de estado -->
+                    <ComboBox Grid.Column="1"
+                              Style="{StaticResource ComboBoxBlueV2}"
+                              ItemsSource="{Binding Statuses}"
+                              SelectedItem="{Binding SelectedStatus}"
+                              ItemTemplate="{StaticResource StatusItemTemplate}"
+                              Padding="10,4"
+                              MinHeight="30"/>
+                </Grid>
+            </Border>
+
+
+            <!-- Tabla -->
+            <Border Style="{StaticResource CardStyle}" Grid.Row="1" Margin="0,16,0,0">
+                <DataGrid ItemsSource="{Binding PageItems}" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Código" Binding="{Binding ProductCode}" Width="160"/>
+                        <DataGridTextColumn Header="Nombre" Binding="{Binding ProductName}" Width="*"/>
+                        <DataGridTemplateColumn Header="Estado" Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource StatusBadgeBorderStyle}">
+                                        <TextBlock Text="{Binding StatusName}" FontWeight="SemiBold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Proveedor" Binding="{Binding SupplierName}" Width="220"/>
+                        <DataGridTextColumn Header="Existencia" Binding="{Binding InStock}" Width="130" ElementStyle="{StaticResource RightAligned}"/>
+                        <DataGridTextColumn Header="Precio" Binding="{Binding PricePerUnit, StringFormat={}{0:C}}" Width="130" ElementStyle="{StaticResource RightAligned}"/>
+
+                        <DataGridTemplateColumn Header="Opciones" Width="80">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button ToolTip="Ver opciones"
+                                            Click="OpenOptions_Click">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource IconGhostButton}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding StatusName}" Value="Inactivo">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                        <Setter Property="ToolTip" Value="Producto inactivo"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding StatusName}" Value="Inactive">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                        <Setter Property="ToolTip" Value="Inactive product"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+
+                                        <Path Data="{StaticResource IconOptionsVector}"
+                                              Width="18" Height="18"
+                                              Stretch="Uniform"
+                                              Fill="Transparent"
+                                              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                              StrokeThickness="1.6"
+                                              SnapsToDevicePixels="True"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+
+        <!-- ====== Paginación ====== -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,16">
+            <Button Content="‹" Style="{StaticResource BtnSoft}" Command="{Binding PrevPageCommand}" Margin="3,0"/>
+            <ItemsControl ItemsSource="{Binding PageNumbers}" Margin="3,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding}" Style="{StaticResource BtnSoft}"
+                                Margin="3,0"
+                                Command="{Binding DataContext.GoToPageCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}">
+                            <Button.Background>
+                                <MultiBinding Converter="{StaticResource PageBgConverter}">
+                                    <Binding Path="DataContext.CurrentPage" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                    <Binding/>
+                                </MultiBinding>
+                            </Button.Background>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="›" Style="{StaticResource BtnSoft}" Command="{Binding NextPageCommand}" Margin="3,0"/>
+            <TextBlock Text="{Binding PageInfo}" Margin="12,8,0,0" Foreground="{StaticResource TextSub}"/>
+        </StackPanel>
+    </Grid>
+</Window>
