@@ -141,6 +141,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Reame.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -150,6 +151,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Resource Include="Resources\Docs\Frame - Login.png" />
+    <Resource Include="Resources\Docs\Frame - Options.png" />
+    <Resource Include="Resources\Docs\Frame - Products.png" />
+    <Resource Include="Resources\Docs\Frame - Register.png" />
+    <Resource Include="Resources\Docs\Schema.png" />
     <Content Include="Scripts\Script - Creacion de DB.sql" />
     <Content Include="Scripts\Values.sql" />
     <Resource Include="Views\menu.png" />
