@@ -22,5 +22,14 @@ namespace ProductManagementApp.Services
 
         public Task<OptionItem> SaveOptionAsync(OptionItem option)
             => _repo.SaveOptionAsync(option);
+
+        public Task DeleteOptionAsync(int optionId)
+            => _repo.DeleteOptionAsync(optionId);
+
+        public Task<bool> OptionCodeExistsAsync(string code, int? excludeId = null)
+            => _repo.OptionCodeExistsAsync(code, excludeId);
+
+        public Task<string> GetNextOtpCodeAsync()
+            => _repo.GetNextOtpCodeAsync();
     }
 }

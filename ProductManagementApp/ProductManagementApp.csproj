@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\PageBgConverter.cs" />
+    <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\ValidationHelper.cs" />
     <Compile Include="Data\SqlDb.cs" />
     <Compile Include="DTO\LoginRequest.cs" />

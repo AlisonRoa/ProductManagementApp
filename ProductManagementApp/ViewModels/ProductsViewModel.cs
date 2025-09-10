@@ -1,6 +1,7 @@
 ﻿using ProductManagementApp.DTO;
 using ProductManagementApp.Models;
 using ProductManagementApp.Services;
+using ProductManagementApp.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
+using ProductManagementApp.Common;
 
 namespace ProductManagementApp.ViewModels
 {
@@ -16,13 +18,21 @@ namespace ProductManagementApp.ViewModels
     {
         private readonly IProductsService _service;
         private readonly ICollectionView _view;
-        public IProductsService Service { get { return _service; } }
+
+        public IProductsService Service => _service;
 
         public ProductsViewModel(IProductsService service)
         {
             _service = service;
             _view = CollectionViewSource.GetDefaultView(AllProducts);
             _view.Filter = Filter;
+        }
+
+        private void OpenOptions(ProductListItem product)
+        {
+            var win = new OptionsWindow(_service, product);
+            win.Owner = System.Windows.Application.Current.MainWindow;
+            win.ShowDialog();
         }
 
         // Datos para la vista
@@ -43,7 +53,12 @@ namespace ProductManagementApp.ViewModels
         public StatusItem SelectedStatus
         {
             get { return _selectedStatus; }
-            set { _selectedStatus = value; OnFilterChanged(); }
+            set
+            {
+                _selectedStatus = value ?? new StatusItem { Id = 0, Name = "Todos" };
+                OnFilterChanged();
+                OnPropertyChanged();
+            }
         }
 
         // #region Paginación (client-side)
@@ -88,13 +103,21 @@ namespace ProductManagementApp.ViewModels
         // region Carga inicial
         public async Task LoadAsync()
         {
-            // Estados
+            // ===== Estados =====
             Statuses.Clear();
             var states = await _service.GetStatusesAsync();
-            foreach (var st in states) Statuses.Add(st);
-            SelectedStatus = Statuses.FirstOrDefault();
 
-            // Productos
+            // Si el repo no trajo "Todos", lo insertamos al inicio
+            if (!states.Any(s => string.Equals(s.Name, "Todos", StringComparison.OrdinalIgnoreCase)))
+                Statuses.Add(new StatusItem { Id = 0, Name = "Todos" });
+
+            foreach (var st in states) Statuses.Add(st);
+
+            // Selecciona "Todos" si existe; si no, el primero disponible
+            SelectedStatus = Statuses.FirstOrDefault(s => string.Equals(s.Name, "Todos", StringComparison.OrdinalIgnoreCase))
+                             ?? Statuses.FirstOrDefault();
+
+            // ===== Productos =====
             AllProducts.Clear();
             var prods = await _service.GetProductsAsync();
             foreach (var p in prods) AllProducts.Add(p);
@@ -113,18 +136,24 @@ namespace ProductManagementApp.ViewModels
             var p = obj as ProductListItem;
             if (p == null) return false;
 
-            if (SelectedStatus != null &&
-                SelectedStatus.Name != "Todos" &&
-                !string.Equals(p.StatusName, SelectedStatus.Name, StringComparison.OrdinalIgnoreCase))
-                return false;
+            // Si no hay estado seleccionado, no filtramos por estado
+            var sel = SelectedStatus?.Name;
 
+            if (!string.IsNullOrWhiteSpace(sel) &&
+                !string.Equals(sel, "Todos", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!string.Equals(p.StatusName ?? "", sel, StringComparison.OrdinalIgnoreCase))
+                    return false;
+            }
+
+            // Texto
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                var q = SearchText.Trim().ToLower();
+                var q = SearchText.Trim().ToLowerInvariant();
                 bool hit =
-                    (p.ProductCode != null && p.ProductCode.ToLower().Contains(q)) ||
-                    (p.ProductName != null && p.ProductName.ToLower().Contains(q)) ||
-                    (p.SupplierName != null && p.SupplierName.ToLower().Contains(q));
+                    (!string.IsNullOrEmpty(p.ProductCode) && p.ProductCode.ToLowerInvariant().Contains(q)) ||
+                    (!string.IsNullOrEmpty(p.ProductName) && p.ProductName.ToLowerInvariant().Contains(q)) ||
+                    (!string.IsNullOrEmpty(p.SupplierName) && p.SupplierName.ToLowerInvariant().Contains(q));
                 if (!hit) return false;
             }
 
@@ -133,12 +162,20 @@ namespace ProductManagementApp.ViewModels
 
         private void OnFilterChanged()
         {
-            _view.Refresh();
-            CurrentPage = 1;
+            try
+            {
+                _view.Refresh();
+            }
+            catch { }
+
+            if (CurrentPage > TotalPages) CurrentPage = TotalPages;
+            if (CurrentPage < 1) CurrentPage = 1;
+
             OnPropertyChanged(nameof(PageItems));
             OnPropertyChanged(nameof(PageInfo));
             UpdatePageNumbers();
         }
+
 
         private void UpdatePageNumbers()
         {
@@ -157,17 +194,6 @@ namespace ProductManagementApp.ViewModels
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(prop));
         }
-    }
-    // #endregion
-
-    // #region Comando simple
-    public class RelayCommand : ICommand
-    {
-        private readonly Action<object> _execute;
-        public RelayCommand(Action<object> execute) { _execute = execute; }
-        public bool CanExecute(object parameter) { return true; }
-        public void Execute(object parameter) { _execute(parameter); }
-        public event EventHandler CanExecuteChanged { add { } remove { } }
     }
     // #endregion
 

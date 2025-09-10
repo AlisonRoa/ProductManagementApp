@@ -1,4 +1,5 @@
-﻿using ProductManagementApp.Common;
+﻿using System;
+using ProductManagementApp.Common;
 using ProductManagementApp.Models;
 using ProductManagementApp.Repositories;
 using ProductManagementApp.Services;
@@ -31,9 +32,18 @@ namespace ProductManagementApp
             var product = fe?.DataContext as ProductListItem;
             if (product == null) return;
 
+            // Bloqueo defensivo
+            if (string.Equals(product.StatusName, "Inactivo", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(product.StatusName, "Inactive", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Este producto está inactivo. No se pueden gestionar opciones.",
+                    "Producto inactivo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
             var vmMain = DataContext as ProductsViewModel;
-            var win = new OptionsWindow { Owner = this };
-            win.DataContext = new OptionsViewModel(vmMain.Service, product);
+            var win = new OptionsWindow(vmMain.Service, product);
+            win.Owner = System.Windows.Application.Current.MainWindow;
             win.ShowDialog();
         }
     }

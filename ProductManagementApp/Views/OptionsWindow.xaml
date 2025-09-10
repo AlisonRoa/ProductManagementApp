@@ -179,16 +179,29 @@
 
                 <!-- Tabla de opciones -->
                 <Border Grid.Row="2" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1" Background="White">
-                    <DataGrid ItemsSource="{Binding Options}" SelectedItem="{Binding Selected}">
+                    <DataGrid ItemsSource="{Binding Options}"
+                              SelectedItem="{Binding Selected}"
+                              IsReadOnly="{Binding OptionsReadOnly}"
+                              IsEnabled="{Binding OptionsEnabled}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Código" Binding="{Binding OptionCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="160"/>
                             <DataGridTextColumn Header="Nombre" Binding="{Binding OptionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
-                            <DataGridComboBoxColumn Header="Estado"
-                                                    SelectedValueBinding="{Binding StatusId, Mode=TwoWay}"
-                                                    SelectedValuePath="Id"
-                                                    DisplayMemberPath="Name"
-                                                    ItemsSource="{Binding Statuses}"
-                                                    Width="180"/>
+                            <DataGridTemplateColumn Header="Estado" Width="180">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding StatusName}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <ComboBox
+                                            ItemsSource="{Binding DataContext.Statuses, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            DisplayMemberPath="Name"
+                                            SelectedValuePath="Id"
+                                            SelectedValue="{Binding StatusId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>

@@ -199,5 +199,51 @@ namespace ProductManagementApp.Repositories
             }
             return o;
         }
+
+        public async Task DeleteOptionAsync(int optionId)
+        {
+            const string sql = @"DELETE FROM PM.Options WHERE Id = @Id;";
+
+            using (var cn = CreateConnection())
+            using (var cmd = new SqlCommand(sql, cn))
+            {
+                cmd.Parameters.AddWithValue("@Id", optionId);
+                await cn.OpenAsync().ConfigureAwait(false);
+                await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
+            }
+        }
+
+        public async Task<bool> OptionCodeExistsAsync(string code, int? excludeId = null)
+        {
+            const string sql = @"SELECT CASE WHEN EXISTS(
+                                        SELECT 1 FROM PM.Options 
+                                        WHERE OptionCode = @code AND (@ex IS NULL OR Id <> @ex)
+                                    ) THEN 1 ELSE 0 END;";
+            using (var cn = CreateConnection())
+            using (var cmd = new SqlCommand(sql, cn))
+            {
+                cmd.Parameters.AddWithValue("@code", code ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@ex", (object)excludeId ?? DBNull.Value);
+                await cn.OpenAsync().ConfigureAwait(false);
+                var val = (int)await cmd.ExecuteScalarAsync().ConfigureAwait(false);
+                return val == 1;
+            }
+        }
+
+        public async Task<string> GetNextOtpCodeAsync()
+        {
+            const string sql = @"SELECT 'OTP-' + RIGHT('000' + CAST(ISNULL(MAX(CAST(SUBSTRING(OptionCode,5,10) AS INT)),0) + 1 AS VARCHAR(10)), 3)
+                                FROM PM.Options
+                                WHERE OptionCode LIKE 'OTP-%';";
+            using (var cn = CreateConnection())
+            using (var cmd = new SqlCommand(sql, cn))
+            {
+                await cn.OpenAsync().ConfigureAwait(false);
+                var s = await cmd.ExecuteScalarAsync().ConfigureAwait(false);
+                return Convert.ToString(s);
+            }
+        }
+
+
     }
 }

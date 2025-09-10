@@ -1,27 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Views/OptionsWindow.xaml.cs
+using ProductManagementApp.Services;
+using ProductManagementApp.ViewModels;
+using ProductManagementApp.Models;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ProductManagementApp.Views
 {
-    /// <summary>
-    /// Lógica de interacción para OptionsWindow.xaml
-    /// </summary>
     public partial class OptionsWindow : Window
     {
-        public OptionsWindow()
+        public OptionsWindow(IProductsService service, ProductListItem product)
         {
             InitializeComponent();
+            DataContext = new OptionsViewModel(service, product);
         }
     }
 }

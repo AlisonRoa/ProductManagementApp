@@ -410,13 +410,12 @@
             <Style.Triggers>
                 <!-- Activo / Active -->
                 <DataTrigger Binding="{Binding StatusName}" Value="Activo">
-                    <Setter Property="Background" Value="#DBEAFE"/>
-                    <!-- azul claro -->
-                    <Setter Property="BorderBrush" Value="#93C5FD"/>
+                    <Setter Property="Background" Value="#DAFDBA"/>
+                    <Setter Property="BorderBrush" Value="#45C4B0"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding StatusName}" Value="Active">
-                    <Setter Property="Background" Value="#DBEAFE"/>
-                    <Setter Property="BorderBrush" Value="#93C5FD"/>
+                    <Setter Property="Background" Value="#DAFDBA"/>
+                    <Setter Property="BorderBrush" Value="#45C4B0"/>
                 </DataTrigger>
 
                 <!-- Inactivo / Inactive -->
@@ -435,8 +434,8 @@
                     <Setter Property="BorderBrush" Value="#0A36CC"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding StatusName}" Value="Draft">
-                    <Setter Property="Background" Value="#E5E7EB"/>
-                    <Setter Property="BorderBrush" Value="#0A36CC"/>
+                    <Setter Property="Background" Value="#DBEAFE"/>
+                    <Setter Property="BorderBrush" Value="#93C5FD"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -565,9 +564,23 @@
                         <DataGridTemplateColumn Header="Opciones" Width="80">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource IconGhostButton}"
-                                            ToolTip="Ver opciones"
+                                    <Button ToolTip="Ver opciones"
                                             Click="OpenOptions_Click">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource IconGhostButton}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding StatusName}" Value="Inactivo">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                        <Setter Property="ToolTip" Value="Producto inactivo"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding StatusName}" Value="Inactive">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                        <Setter Property="ToolTip" Value="Inactive product"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+
                                         <Path Data="{StaticResource IconOptionsVector}"
                                               Width="18" Height="18"
                                               Stretch="Uniform"
@@ -579,7 +592,6 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
